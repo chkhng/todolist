@@ -1,4 +1,14 @@
 .custom-table .ant-table-thead > tr > th {
     background-color: lightskyblue;
+    font-style: bold;
+    
   }
   
+.border-table {
+    border-collapse:collapse;
+  }
+
+.font{
+    font-family: -apple-system;
+    font-size: 16px;
+}

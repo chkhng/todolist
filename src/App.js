@@ -9,8 +9,9 @@ const onOk = (value) => {
 
 const Task = () => (
   <Space direction="vertical" size={12}>
-    <Text style={{ textAlign: 'left' }}>Deadline</Text>
+    <Text className="font" style={{ textAlign: 'left' }}>Deadline:</Text>
     <DatePicker
+      dateFormat="dd/mm/yyyy"
       showTime
       onChange={(value, dateString) => {
         console.log('Selected Time: ', value);
@@ -83,17 +84,17 @@ const App = () => {
     <div>
       <h1 style={{ textAlign: 'center' }}>To-Do List</h1>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-        <div style={{ width: '60%'}}>
+        <div style={{ width: '60%', height: '40px'}}>
           <h1 style={{ textAlign: 'center' }}>To-Do List</h1>
-          <Table pagination={false} className="custom-table" dataSource={dataSource} columns={columns} />
+          <Table pagination={false} className="custom-table" dataSource={dataSource} columns={columns} bordered/>
         </div>
         <div style={{ width: '38%'}}>
           <h1 style={{ textAlign: 'center' }}>Add Task</h1>
-          <Form form={form} layout={'horizontal'} style={{ maxWidth: '100%', margin: '0 auto' , backgroundColor: 'lightgray' }}>
-            <Form.Item label="Task" name="task" rules={[{ message: 'Enter Task' }]}>
+          <Form form={form} layout={'horizontal'} style={{ maxWidth: '100%', margin: '0 auto' , backgroundColor: '#f0f0f0' }}>
+            <Form.Item className="font" label="Task" name="task" rules={[{ message: 'Enter Task' }]}>
             </Form.Item>
             <Input />
-            <Form.Item label="Status" name="status" rules={[{ message: 'Enter Status' }]}>
+            <Form.Item className="font" label="Status" name="status" rules={[{ message: 'Enter Status' }]}>
             </Form.Item>
             <Input />
             <Task />
