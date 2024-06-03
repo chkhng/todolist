@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Space, Table, Typography, Modal } from 'antd';
+import { Button, DatePicker, Form, Input, Space, Table, Typography} from 'antd';
 import React, { useState } from 'react';
 import './App.css';
 
