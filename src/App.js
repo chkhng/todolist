@@ -1,67 +1,39 @@
-import { Button, DatePicker, Form, Input, Space, Table, Typography} from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Input, Table, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import Task from './Task.js';
 
-const { Text } = Typography;
 
-const onOk = (value) => {
-  console.log('onOk: ', value);
+const loadData = () => {
+  const data = localStorage.getItem('tasks');
+  return data ? JSON.parse(data) : [];
 };
 
-const Task = ({ onDateChange }) => (
-  <Space direction="vertical" size={12}>
-    <Text className="font" style={{ textAlign: 'left' }}>Deadline:</Text>
-    <DatePicker
-      showTime
-      onChange={(value, dateString) => {
-        onDateChange(dateString);
-      }}
-      onOk={onOk}
-    />
-  </Space>
-);
+
+const saveData = (data) => {
+  localStorage.setItem('tasks', JSON.stringify(data));
+};
 
 const App = () => {
   const [form] = Form.useForm();
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      task: 'Complete Assignment',
-      status: 'Completed',
-      time: '10/11/2023, 12:00:00 PM',
-    },
-    {
-      key: '2',
-      task: 'Submit Project',
-      status: 'Completed',
-      time: '10/11/2023, 5:22:00 PM',
-    },
-    {
-      key: '3',
-      task: 'Practice DSA',
-      status: 'Ongoing',
-      time: '10/11/2023, 7:00:00 PM',
-    },
-    {
-      key: '4',
-      task: 'Fix the bug',
-      status: 'Pending',
-      time: '10/11/2023, 8:30:00 PM',
-    },
-  ]);
-
+  const [dataSource, setDataSource] = useState(loadData());
   const [editingTask, setEditingTask] = useState(null);
   const [deadline, setDeadline] = useState(null);
+
+  useEffect(() => {
+    saveData(dataSource);
+  }, [dataSource]);
 
   const handleAddTask = (values) => {
     const newTask = {
       key: `${dataSource.length + 1}`,
       task: values.task,
       status: values.status,
-      time: deadline,
+      deadline: deadline,
     };
     setDataSource([...dataSource, newTask]);
     form.resetFields();
+    setDeadline(null);
   };
 
   const handleDeleteTask = (key) => {
@@ -71,19 +43,20 @@ const App = () => {
   const handleEditTask = (record) => {
     setEditingTask(record);
     form.setFieldsValue(record);
-    setDeadline(record.time);
+    setDeadline(record.deadline);
   };
 
   const handleUpdateTask = (values) => {
     setDataSource(
       dataSource.map((item) =>
         item.key === editingTask.key
-          ? { ...item, task: values.task, status: values.status, time: deadline }
+          ? { ...item, task: values.task, status: values.status, deadline: deadline }
           : item
       )
     );
     setEditingTask(null);
     form.resetFields();
+    setDeadline(null);
   };
 
   const columns = [
@@ -99,8 +72,8 @@ const App = () => {
     },
     {
       title: 'Deadline',
-      dataIndex: 'time',
-      key: 'time',
+      dataIndex: 'deadline',
+      key: 'deadline',
     },
     {
       title: 'Actions',
@@ -124,7 +97,7 @@ const App = () => {
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <div style={{ width: '60%', height: '40px' }}>
           <h1 style={{ textAlign: 'center' }}>To-Do List</h1>
-          <Table pagination={false} className="custom-table" dataSource={dataSource} columns={columns} bordered/>
+          <Table pagination={false} className="custom-table" dataSource={dataSource} columns={columns} bordered />
         </div>
         <div style={{ width: '38%' }}>
           <h1 style={{ textAlign: 'center' }}>{editingTask ? 'Edit Task' : 'Add Task'}</h1>
@@ -138,24 +111,24 @@ const App = () => {
               className="font"
               label="Task"
               name="task"
-              rules={[{message: 'Enter Task' }]}
+              rules={[{ required: true, message: 'Enter Task' }]}
             >
-            <pre>
-            <Input />
-            </pre>
+              <Input />
             </Form.Item>
             <Form.Item
               className="font"
               label="Status"
               name="status"
-              rules={[{ message: 'Enter Status' }]}
+              rules={[{ required: true, message: 'Select Status' }]}
             >
-            <pre>
-            <Input />
-            </pre>
+              <Select>
+                <Select.Option value="Completed">Completed</Select.Option>
+                <Select.Option value="Ongoing">Ongoing</Select.Option>
+                <Select.Option value="Pending">Pending</Select.Option>
+              </Select>
             </Form.Item>
 
-            <pre><Task onDateChange={setDeadline} /></pre>
+            <Task onDateChange={setDeadline} initialValue={deadline} />
             <Form.Item>
               <Button type="primary" style={{ background: 'darkgreen', marginTop: '20px' }} htmlType="submit">
                 {editingTask ? 'Update Task' : 'Add Task'}
@@ -166,6 +139,7 @@ const App = () => {
                   onClick={() => {
                     setEditingTask(null);
                     form.resetFields();
+                    setDeadline(null);
                   }}
                 >
                   Cancel
