@@ -2,6 +2,7 @@ import { Button, Form, Input, Table, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Task from './Task.js';
+// import { getValue } from '@testing-library/user-event/dist/utils/index.js';
 
 const loadData = () => {
   const data = localStorage.getItem('tasks');
@@ -48,7 +49,7 @@ const App = () => {
 
   const handleUpdateTask = (values) => {
     setDataSource(
-      dataSource.map((item) =>
+      dataSource?.map((item) =>
         item.key === editingTask.key
           ? { ...item, task: values.task, status: values.status, deadline: deadline }
           : item
@@ -74,6 +75,9 @@ const App = () => {
       title: 'Deadline',
       dataIndex: 'deadline',
       key: 'deadline',
+      render: (value) => {
+        return <>{`${value.$D}/${value.$M + 1}/${value.$y}`}</>
+      }
     },
     {
       title: 'Actions',
