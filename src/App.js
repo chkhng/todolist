@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Task from './Task.js';
 
-
 const loadData = () => {
   const data = localStorage.getItem('tasks');
   return data ? JSON.parse(data) : [];
@@ -23,6 +22,7 @@ const App = () => {
   useEffect(() => {
     saveData(dataSource);
   }, [dataSource]);
+
 
   const handleAddTask = (values) => {
     const newTask = {
@@ -78,7 +78,7 @@ const App = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record) => (
+      render: (record) => (
         <span>
           <Button type="primary" style={{ marginRight: 8 }} onClick={() => handleEditTask(record)}>
             Edit
